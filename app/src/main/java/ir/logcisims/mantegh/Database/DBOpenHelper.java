@@ -23,7 +23,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PORT = "Port";
 
     private static final String TABLE_CREATE =
-            "CREATE TABLE " + TABLE_SETTING + " (" +
+            "CREATE TABLE IF NOT EXISTS " + TABLE_SETTING + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_HOST + " TEXT, " +
                     COLUMN_USER + " TEXT, " +

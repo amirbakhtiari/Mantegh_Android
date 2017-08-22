@@ -1,6 +1,7 @@
 package ir.logcisims.mantegh;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -118,7 +119,7 @@ public class ServerSettingActivity extends AppCompatActivity {
     private void getDataSetting() {
         dbOpenHelper = new DBOpenHelper(ServerSettingActivity.this);
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
-
+        dbOpenHelper.onCreate(db);
         Cursor cursor = db.rawQuery("SELECT * FROM " + DBOpenHelper.TABLE_SETTING, null);
         if(cursor.getCount() > 0)
             cursor.moveToFirst();
@@ -157,7 +158,6 @@ public class ServerSettingActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute() {
-            Toast.makeText(getBaseContext(), "لطفا صبر کنید.", Toast.LENGTH_LONG).show();
             btnTestConnection.setEnabled(false);
         }
 
@@ -175,17 +175,22 @@ public class ServerSettingActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ServerSettingActivity.this);
                 builder.setTitle("اتصال به بانک اطللاعاتی");
                 builder.setMessage("ارتباط صحیح و برقرار است.");
-                builder.setPositiveButton("باشه", null);
+                builder.setPositiveButton("باشه", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        btnTestConnection.setEnabled(true);
+                    }
+                });
                 builder.create().show();
+
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ServerSettingActivity.this);
                 builder.setTitle("اتصال به بانک اطللاعاتی");
                 builder.setMessage("امکان اتصال به بانک اطاعاتی وجود ندارد.");
                 builder.setPositiveButton("باشه", null);
                 builder.create().show();
-//                Toast.makeText(getBaseContext(), "", Toast.LENGTH_LONG).show();
+                btnTestConnection.setEnabled(true);
             }
-            btnTestConnection.setEnabled(true);
         }
     }
 }
