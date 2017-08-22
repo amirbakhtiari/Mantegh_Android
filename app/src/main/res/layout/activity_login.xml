@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="ir.logcisims.mantegh.LoginActivity"
+    android:padding="5dp"
+    >
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:layout_centerHorizontal="true"
+        android:padding="15dp"
+        android:textSize="20sp"/>
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:layout_below="@id/textViewTitle"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="نام کاربری"
+        android:layout_below="@id/imageViewLogo"
+        android:layout_marginTop="20dp"
+        android:padding="5dp"
+        android:textSize="20dp"/>
+
+    <EditText
+        android:id="@+id/editTextUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewLogo"
+        android:layout_marginTop="60dp"
+        android:inputType="text"
+        style="@style/TextEditStyle"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="رمز"
+        android:layout_below="@id/imageViewLogo"
+        android:layout_marginTop="105dp"
+        android:padding="5dp"
+        android:textSize="20dp"/>
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewLogo"
+        android:layout_marginTop="140dp"
+        android:inputType="textPassword"
+        style="@style/TextEditStyle"/>
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextPassword"
+        android:text="ورود"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:padding="20dp" />
+
+    <Button
+        android:id="@+id/btnSettingDB"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/btnLogin"
+        android:layout_below="@id/btnLogin"
+        android:text="تنظیمات دیتابیس"
+        android:layout_centerHorizontal="true"
+        android:padding="20dp" />
+
+
+</RelativeLayout>
