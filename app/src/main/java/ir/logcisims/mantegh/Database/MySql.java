@@ -57,11 +57,11 @@ public class MySql {
 
             stmt = conn.createStatement();
             String sql;
-            sql = "SELECT iID FROM persons";
+            sql = "SELECT iID, sName FROM persons";
             ResultSet rs = stmt.executeQuery(sql);
 
             while(rs.next()) {
-                Log.d(TAG, rs.getString("iID"));
+                Log.d(TAG, rs.getString("sName"));
             }
 
             rs.close();
