@@ -54,7 +54,7 @@ public class MySql {
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + String.valueOf(port) + "/" + db, user, password);
-            Log.d(TAG, host + "-" + user + "-" + password);
+
             stmt = conn.createStatement();
             String sql;
             sql = "SELECT iID FROM persons";
@@ -72,9 +72,5 @@ public class MySql {
             Log.d(TAG, e.getMessage());
             isConnected = false;
         }
-    }
-
-    private void executeQuery() {
-
     }
 }

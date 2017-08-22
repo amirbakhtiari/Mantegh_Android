@@ -20,12 +20,12 @@ public class UserAuth {
         setPassword(password);
     }
 
-    public void login() {
-
+    public boolean login() {
+        return false;
     }
 
-    public void logout() {
-
+    public boolean logout() {
+        return true;
     }
 
     public boolean isLoging() {
