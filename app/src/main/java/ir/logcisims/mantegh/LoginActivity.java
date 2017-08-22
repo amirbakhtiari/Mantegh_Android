@@ -31,10 +31,10 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 UserAuth userAuth = new UserAuth(userName, password);
-                if(!userAuth.login()) {
+                /*if(!userAuth.login()) {
                     Toast.makeText(getBaseContext(), "نام کاربری یا رمز را اشتباه وارد کرده اید.", Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

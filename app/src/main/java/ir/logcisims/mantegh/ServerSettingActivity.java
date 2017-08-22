@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -98,6 +99,8 @@ public class ServerSettingActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if(checkConnectToDb == null)
+            return;
         checkConnectToDb.cancel(true);
     }
 
@@ -114,9 +117,13 @@ public class ServerSettingActivity extends AppCompatActivity {
 
     private void getDataSetting() {
         dbOpenHelper = new DBOpenHelper(ServerSettingActivity.this);
-        SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+
         Cursor cursor = db.rawQuery("SELECT * FROM " + DBOpenHelper.TABLE_SETTING, null);
-        cursor.moveToFirst();
+        if(cursor.getCount() > 0)
+            cursor.moveToFirst();
+        else
+            return;
 
         editTextHostname.setText(cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_HOST)));
         editTextUser.setText(cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_USER)));
@@ -138,12 +145,15 @@ public class ServerSettingActivity extends AppCompatActivity {
             dbOpenHelper = new DBOpenHelper(ServerSettingActivity.this);
             SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
             Cursor cursor = db.rawQuery("SELECT * FROM " + DBOpenHelper.TABLE_SETTING, null);
-            cursor.moveToFirst();
-            host = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_HOST));
-            user = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_USER));
-            password = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_PASSWORD));
-            port = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.COLUMN_PORT));
-            dBName = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_DBNAME));
+            if(cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                host = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_HOST));
+                user = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_USER));
+                password = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_PASSWORD));
+                port = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.COLUMN_PORT));
+                dBName = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_DBNAME));
+            }
         }
         @Override
         protected void onPreExecute() {
@@ -161,11 +171,20 @@ public class ServerSettingActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            if(isConnected)
-                Toast.makeText(getBaseContext(), "ارتباط برقرار است.", Toast.LENGTH_LONG).show();
-             else
-                Toast.makeText(getBaseContext(), "لطفا اطلاعات هاست خود را چک کنید\nامکان اتصال به بانک اطاعاتی وجود ندارد.", Toast.LENGTH_LONG).show();
-
+            if(isConnected) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ServerSettingActivity.this);
+                builder.setTitle("اتصال به بانک اطللاعاتی");
+                builder.setMessage("ارتباط صحیح و برقرار است.");
+                builder.setPositiveButton("باشه", null);
+                builder.create().show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ServerSettingActivity.this);
+                builder.setTitle("اتصال به بانک اطللاعاتی");
+                builder.setMessage("امکان اتصال به بانک اطاعاتی وجود ندارد.");
+                builder.setPositiveButton("باشه", null);
+                builder.create().show();
+//                Toast.makeText(getBaseContext(), "", Toast.LENGTH_LONG).show();
+            }
             btnTestConnection.setEnabled(true);
         }
     }
