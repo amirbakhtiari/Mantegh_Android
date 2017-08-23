@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
@@ -21,6 +22,7 @@ public class ServerSettingActivity extends AppCompatActivity {
 
     private Button btnSave, btnTestConnection;
     private EditText editTextHostname, editTextUser, editTextPassword, editTextDbName, editTextPort;
+    private ProgressBar progressBar;
 
     private SQLiteDatabase db;
     private DBOpenHelper dbOpenHelper;
@@ -79,6 +81,7 @@ public class ServerSettingActivity extends AppCompatActivity {
 
                 if(rowId > 0)
                     Toast.makeText(ServerSettingActivity.this, "اطلاعات بانک اطلاعاتی شما با موفقیت ذخیره شد.", Toast.LENGTH_SHORT).show();
+                btnTestConnection.setEnabled(true);
             }
         });
 
@@ -108,6 +111,7 @@ public class ServerSettingActivity extends AppCompatActivity {
     private void init() {
         btnSave = (Button) findViewById(R.id.btnSave);
         btnTestConnection = (Button) findViewById(R.id.btnTestConnection);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         editTextHostname = (EditText) findViewById(R.id.editTextHostName);
         editTextUser = (EditText) findViewById(R.id.editTextUser);
@@ -142,10 +146,12 @@ public class ServerSettingActivity extends AppCompatActivity {
         private int port;
         private String dBName;
 
+        private SQLiteDatabase db;
+
+
         public CheckConnectToDb() {
             dbOpenHelper = new DBOpenHelper(ServerSettingActivity.this);
-            SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM " + DBOpenHelper.TABLE_SETTING, null);
+            Cursor cursor = dbOpenHelper.readData(db);
             if(cursor.getCount() > 0) {
                 cursor.moveToFirst();
 
@@ -158,39 +164,49 @@ public class ServerSettingActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
             btnTestConnection.setEnabled(false);
+            btnSave.setEnabled(false);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            MySql mySql = new MySql(host, user, password, port, dBName);
+            MySql mySql = new MySql(getBaseContext());
             isConnected = mySql.connected();
             return isConnected;
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(ServerSettingActivity.this);
+
             if(isConnected) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ServerSettingActivity.this);
                 builder.setTitle("اتصال به بانک اطللاعاتی");
                 builder.setMessage("ارتباط صحیح و برقرار است.");
                 builder.setPositiveButton("باشه", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         btnTestConnection.setEnabled(true);
+                        btnSave.setEnabled(true);
                     }
+
                 });
                 builder.create().show();
-
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ServerSettingActivity.this);
                 builder.setTitle("اتصال به بانک اطللاعاتی");
                 builder.setMessage("امکان اتصال به بانک اطاعاتی وجود ندارد.");
-                builder.setPositiveButton("باشه", null);
+                builder.setPositiveButton("باشه", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        btnTestConnection.setEnabled(true);
+                        btnSave.setEnabled(true);
+                    }
+                });
+
                 builder.create().show();
-                btnTestConnection.setEnabled(true);
             }
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 }

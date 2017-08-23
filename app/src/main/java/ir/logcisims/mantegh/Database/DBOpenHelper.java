@@ -1,6 +1,7 @@
 package ir.logcisims.mantegh.Database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -49,5 +50,11 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     public void deleteData(SQLiteDatabase db) {
         db.execSQL("DELETE FROM " + TABLE_SETTING);
+    }
+
+    public Cursor readData(SQLiteDatabase db) {
+        db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SETTING, null);
+        return cursor;
     }
 }
